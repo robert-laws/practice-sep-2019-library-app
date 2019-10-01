@@ -41,6 +41,13 @@ class LessonPlanForm extends Component {
     return courseListing;
   }
 
+  getLibrariansList = () => {
+    const librariansListing = this.props.librarians.map(librarian => {
+      return <option key={librarian.id} value={librarian.name}>{librarian.name}</option>
+    })
+    return librariansListing;
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if(this.state.courseNumber !== prevState.courseNumber) {
       const thisCourse = this.props.courses.filter(course => {
@@ -173,9 +180,7 @@ class LessonPlanForm extends Component {
                         <Label for="librarian">Librarian</Label>
                         <Input type="select" name="librarian" id="librarian" value={librarian} onChange={this.handleChange}>
                           <option value="0">Make a Selection</option>
-                          <option value="Robert Laws">Robert Laws</option>
-                          <option value="Paschalia Terzi">Paschalia Terzi</option>
-                          <option value="Tatiana Usova">Tatiana Usova</option>
+                          {this.getLibrariansList()}
                         </Input>
                       </FormGroup>
                     </Col>
