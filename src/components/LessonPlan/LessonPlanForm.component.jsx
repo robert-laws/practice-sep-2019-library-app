@@ -1,62 +1,121 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { Alert } from 'reactstrap';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+
+import { firestore } from '../../firebase/firebaseConfig';
 
 class LessonPlanForm extends Component {
   state = {
-    selectedTerm: '0',
-    selectedNumber: '0',
-    selectedTitle: '',
-    selectedFaculty: '',
-    selectedLibrarian: '0',
-    selectedCoInstructor: 'None',
-    selectedDate: '',
-    selectedDuration: '',
-    selectedStudents: '',
-    courseListing: []
+    term: '0',
+    courseNumber: '0',
+    courseTitle: '',
+    faculty: '',
+    librarian: '0',
+    coInstructor: '',
+    date: '',
+    duration: '0',
+    studentCount: '0',
+    error: ''
   }
 
-  handleChange = event => {
-    const coursesNumbers = this.props.courses.map(course => {
-      if(course.term === event.target.value) {
-        return <option key={course.id} value={course.number}>{course.number}</option>
+  durationIntervals = (start, finish, interval) => {
+    let intervals = [];
+    do {
+      intervals.push(start);
+      start = start + interval;
+    }
+    while(start <= finish)
+    return intervals;
+  }
+
+  getCourseList = term => {
+    const courseListing = this.props.courses.map(course => {
+      if(course.term === term) {
+        return <option key={course.id} value={course.courseNumber}>{course.courseNumber}</option>
       } else {
         return null;
       }
     })
-
-    this.setState({
-      selectedTerm: event.target.value,
-      courseListing: coursesNumbers
-    })
+    return courseListing;
   }
 
-  handleCourseChange = event => {
-    const thisCourse = this.props.courses.filter(course => {
-      return course.number === event.target.value
-    })
-
-    this.setState({
-      selectedFaculty: thisCourse[0].faculty,
-      selectedTitle: thisCourse[0].title,
-      selectedNumber: event.target.value
-    })
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.courseNumber !== prevState.courseNumber) {
+      const thisCourse = this.props.courses.filter(course => {
+        return course.courseNumber === this.state.courseNumber
+      })
+  
+      if(thisCourse.length > 0) {
+        this.setState({
+          faculty: thisCourse[0].faculty,
+          courseTitle: thisCourse[0].courseTitle,
+          courseNumber: this.state.courseNumber
+        })
+      } else {
+        this.setState({
+          faculty: '',
+          courseTitle: '',
+          courseNumber: this.state.courseNumber
+        })
+      }
+    }
   }
 
-  handleLibrarianChange = event => {
-    this.setState({
-      selectedLibrarian: event.target.value
-    })
-  }
-
-  handleTextChange = event => {
+  handleChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   }
 
+  handleSubmit = async event => {
+    event.preventDefault();
+
+    const { term, courseNumber, courseTitle, faculty, librarian, coInstructor, date, duration, studentCount } = this.state;
+
+    const lessonDuration = Number(duration);
+    const lessonStudentCount = Number(studentCount);
+    const lessonDate = new Date(date);
+
+    const lessonsRef = firestore.collection('lessons');
+
+    const lesson = {
+      term,
+      courseNumber,
+      courseTitle,
+      faculty,
+      librarian,
+      coInstructor,
+      date: lessonDate,
+      duration: lessonDuration,
+      studentCount: lessonStudentCount
+    }
+
+    try {
+      await lessonsRef.add(lesson);
+
+      this.setState({
+        term: '0',
+        courseNumber: '0',
+        courseTitle: '',
+        faculty: '',
+        librarian: '0',
+        coInstructor: '',
+        date: '',
+        duration: '0',
+        studentCount: '0',
+        error: ''
+      })
+    } catch(error) {
+      this.setState({
+        error: error.message
+      })
+    }
+  }
+
   render() {
+    const { term, courseNumber, courseTitle, faculty, librarian, coInstructor, date, duration, studentCount, error } = this.state;
+
     return (
       <>
         <Row>
@@ -67,12 +126,16 @@ class LessonPlanForm extends Component {
           <Col sm="12">
             <Card>
               <CardBody>
-                <Form>
+                <CardTitle>
+                  <h4>Lesson Plan Form</h4>
+                  {error === '' ? '' : <Alert color='danger'>{error}</Alert>}
+                </CardTitle>
+                <Form onSubmit={this.handleSubmit}>
                   <Row form>
                     <Col md={6}>
                       <FormGroup>
                         <Label for="term">Term</Label>
-                        <Input type="select" name="term" id="term" value={this.state.selectedTerm} onChange={this.handleChange}>
+                        <Input type="select" name="term" id="term" value={term} onChange={this.handleChange}>
                           <option value="0">Make a Selection</option>
                           <option value="Fall 2019">Fall 2019</option>
                           <option value="Spring 2020">Spring 2020</option>
@@ -82,10 +145,10 @@ class LessonPlanForm extends Component {
                     </Col>
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="number">Course Number</Label>
-                        <Input type="select" name="number" id="number" value={this.state.selectedNumber} onChange={this.handleCourseChange}>
+                        <Label for="courseNumber">Course Number</Label>
+                        <Input type="select" name="courseNumber" id="courseNumber" value={courseNumber} onChange={this.handleChange} disabled={term === '0'}>
                           <option value="0">Make a Selection</option>
-                          {this.state.courseListing}
+                          {this.getCourseList(term)}
                         </Input>
                       </FormGroup>
                     </Col>
@@ -93,22 +156,22 @@ class LessonPlanForm extends Component {
                   <Row form>
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="title">Course Title</Label>
-                        <Input type="text" name="title" id="title" value={this.state.selectedTitle} readOnly />
+                        <Label for="courseTitle">Course Title</Label>
+                        <Input type="text" name="courseTitle" id="courseTitle" value={courseTitle} onChange={this.handleChange} readOnly={courseTitle === '0'} />
                       </FormGroup>
                     </Col>
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="faculty">Faculty</Label>
-                        <Input type="text" name="faculty" id="faculty" value={this.state.selectedFaculty} readOnly />
+                        <Label for="faculty">Faculty Name</Label>
+                        <Input type="text" name="faculty" id="faculty" value={faculty} onChange={this.handleChange} readOnly={courseNumber === '0'} />
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row form>
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="term">Librarian</Label>
-                        <Input type="select" name="term" id="term" value={this.state.selectedLibrarian} onChange={this.handleLibrarianChange}>
+                        <Label for="librarian">Librarian</Label>
+                        <Input type="select" name="librarian" id="librarian" value={librarian} onChange={this.handleChange}>
                           <option value="0">Make a Selection</option>
                           <option value="Robert Laws">Robert Laws</option>
                           <option value="Paschalia Terzi">Paschalia Terzi</option>
@@ -118,29 +181,44 @@ class LessonPlanForm extends Component {
                     </Col>
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="selectedCoInstructor">Co-Instructor</Label>
-                        <Input type="text" name="selectedCoInstructor" id="selectedCoInstructor" value={this.state.selectedCoInstructor} onChange={this.handleTextChange} />
+                        <Label for="coInstructor">Co-Instructor</Label>
+                        <Input type="text" name="coInstructor" id="coInstructor" value={coInstructor} onChange={this.handleChange} placeholder='None' />
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row form>
                     <Col md={4}>
                       <FormGroup>
-                        <Label for="selectedDate">Session Date</Label>
-                        <Input type="date" name="selectedDate" id="selectedDate" placeholder="date placeholder" value={this.state.selectedTime} onChange={this.handleTextChange} />
+                        <Label for="date">Session Date</Label>
+                        <Input type="date" name="date" id="date" placeholder="date placeholder" value={date} onChange={this.handleChange} />
                       </FormGroup>
                     </Col>
                     <Col md={4}>
                       <FormGroup>
-                        <Label for="selectedDuration">Session Duration</Label>
-                        <Input type="number" name="selectedDuration" id="selectedDuration" placeholder="duration placeholder" value={this.state.selectedDuration} onChange={this.handleTextChange} />
+                        <Label for="duration">Session Duration in Minutes</Label>
+                        <Input type="select" name="duration" id="duration" value={duration} onChange={this.handleChange}>
+                          <option value="0">Make a Selection</option>
+                          {this.durationIntervals(5, 75, 5).map(interval => {
+                            return <option key={interval} value={interval}>{interval}</option>
+                          })}
+                        </Input>
                       </FormGroup>
                     </Col>
                     <Col md={4}>
                       <FormGroup>
-                        <Label for="selectedStudents">Number of Students</Label>
-                        <Input type="number" name="selectedStudents" id="selectedStudents" value={this.state.selectedStudents} onChange={this.handleTextChange} />
+                        <Label for="studentCount">Number of Students</Label>
+                        <Input type="select" name="studentCount" id="studentCount" value={studentCount} onChange={this.handleChange}>
+                          <option value="0">Make a Selection</option>
+                          {this.durationIntervals(1, 35, 1).map(interval => {
+                            return <option key={interval} value={interval}>{interval}</option>
+                          })}
+                        </Input>
                       </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row form>
+                    <Col md={12}>
+                      <Button color='primary'>Next Step</Button>
                     </Col>
                   </Row>
                 </Form>
