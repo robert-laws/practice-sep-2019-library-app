@@ -1,18 +1,25 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+
+// import courseList from './data/courseList';
+// import librariansList from './data/librariansList';
+
+import Navigation from './components/Navigation/Navigation.component';
+import Home from './components/Home/Home.component';
+// import LessonPlanForm from './components/LessonPlan/LessonPlanForm.component';
+
 import './App.scss';
-import { Container } from 'reactstrap';
-
-import courseList from './data/courseList';
-import librariansList from './data/librariansList';
-
-import LessonPlanForm from './components/LessonPlan/LessonPlanForm.component';
 
 function App() {
   return (
-    <Container>
-      <h1>Library App</h1>
-      <LessonPlanForm courses={courseList} librarians={librariansList} />
-    </Container>
+    <>
+      <Navigation />
+      <Switch>
+        <Route exact path="/" component={Home} />
+      </Switch>
+
+      {/* <LessonPlanForm courses={courseList} librarians={librariansList} /> */}
+    </>
   );
 }
 

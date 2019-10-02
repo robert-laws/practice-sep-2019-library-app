@@ -126,10 +126,6 @@ class LessonPlanForm extends Component {
     return (
       <>
         <Row>
-          <Col sm="12">            
-          </Col>
-        </Row>
-        <Row>
           <Col sm="12">
             <Card>
               <CardBody>
