@@ -24,6 +24,10 @@ class LessonPlanMasterForm extends Component {
       startTime: '0',
       duration: '0',
       studentCount: '0'
+    },
+    stepTwo: {
+      classAssignment: '',
+      learningOutcomes: []
     }
   }
 
@@ -65,6 +69,15 @@ class LessonPlanMasterForm extends Component {
     })
   }
 
+  addOutcome = outcome => {
+    let outcomes = this.state.stepTwo.learningOutcomes;
+    outcomes = outcomes.concat(outcome);
+    let newState = { ...this.state.stepTwo, learningOutcomes: outcomes}
+    this.setState({
+      stepTwo: newState
+    })
+  }
+
   handleChange = event => {
     const { name, value, id } = event.target;
     const tree = id.split('-')[0];
@@ -82,7 +95,7 @@ class LessonPlanMasterForm extends Component {
     const currentStep = this.state.currentStep;
     if(currentStep !== 1) {
       return (
-        <Button color='secondary' onClick={this._prev}>Previous</Button>
+        <Button color='secondary' onClick={this._prev}>Previous Step</Button>
       )
     }
 
@@ -93,7 +106,7 @@ class LessonPlanMasterForm extends Component {
     const currentStep = this.state.currentStep;
     if(currentStep < 3) {
       return (
-        <Button color='secondary' onClick={this._next}>Next</Button>
+        <Button color='secondary' onClick={this._next}>Next Step</Button>
       )
     }
 
@@ -110,7 +123,7 @@ class LessonPlanMasterForm extends Component {
           <Col sm="12">
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
-              <LessonPlanStepTwo currentStep={this.state.currentStep} />
+              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepTwo} addOutcome={this.addOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} />
 
               <Row className='mt-3'>
