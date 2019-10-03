@@ -21,7 +21,7 @@ const Navigation = () => {
             <NavLink href="#">About</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="#">Lesson Plans</NavLink>
+            <Link className='nav-link' to='/lesson-plans'>Lesson Plans</Link>
           </NavItem>
           <NavItem>
             <NavLink href="#">Data Dashboard</NavLink>

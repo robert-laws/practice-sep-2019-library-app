@@ -1,12 +1,9 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-// import courseList from './data/courseList';
-// import librariansList from './data/librariansList';
-
 import Navigation from './components/Navigation/Navigation.component';
 import Home from './components/Home/Home.component';
-// import LessonPlanForm from './components/LessonPlan/LessonPlanForm.component';
+import LessonPlanMasterForm from './components/LessonPlanMasterForm/LessonPlanMasterForm.component';
 
 import './App.scss';
 
@@ -16,9 +13,9 @@ function App() {
       <Navigation />
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path='/lesson-plans' component={LessonPlanMasterForm} />
       </Switch>
 
-      {/* <LessonPlanForm courses={courseList} librarians={librariansList} /> */}
     </>
   );
 }
