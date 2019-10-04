@@ -13,6 +13,7 @@ import LessonPlanStepThree from './LessonPlanStepThree.component';
 class LessonPlanMasterForm extends Component {
   state = {
     currentStep: 1,
+    currentOutcome: '',
     stepOne: {
       term: '0',
       courseNumber: '0',
@@ -69,22 +70,34 @@ class LessonPlanMasterForm extends Component {
     })
   }
 
-  addOutcome = outcome => {
+  addOutcome = () => {
     let outcomes = this.state.stepTwo.learningOutcomes;
-    outcomes = outcomes.concat(outcome);
-    let newState = { ...this.state.stepTwo, learningOutcomes: outcomes}
-    this.setState({
-      stepTwo: newState
-    })
+    if (this.state.currentOutcome !== '') {
+      outcomes = outcomes.concat(this.state.currentOutcome);
+      let newState = { ...this.state.stepTwo, learningOutcomes: outcomes}
+      this.setState({
+        stepTwo: newState
+      })
+
+      this.setState({
+        currentOutcome: ''
+      })
+    }
   }
 
   handleChange = event => {
     const { name, value, id } = event.target;
-    const tree = id.split('-')[0];
-    let newState = { ...this.state[`${tree}`], [name]: value }
-    this.setState({
-      [`${tree}`]: newState
-    })
+    if (id.split('-').length > 1) {
+      const tree = id.split('-')[0];
+      let newState = { ...this.state[`${tree}`], [name]: value }
+      this.setState({
+        [`${tree}`]: newState
+      })
+    } else {
+      this.setState({
+        [name]: value
+      })
+    }
   }
 
   handleSubmit = event => {
@@ -123,7 +136,7 @@ class LessonPlanMasterForm extends Component {
           <Col sm="12">
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
-              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepTwo} addOutcome={this.addOutcome} />
+              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepTwo} addOutcome={this.addOutcome} currentOutcome={this.state.currentOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} />
 
               <Row className='mt-3'>

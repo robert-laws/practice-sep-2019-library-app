@@ -21,7 +21,7 @@ class LessonPlanStepTwo extends Component {
       return null;
     }
 
-    const { currentOutcome } = this.state;
+    const currentOutcome = this.props.currentOutcome;
     const { classAssignment, learningOutcomes } = this.props.formData;
 
     return (
@@ -42,11 +42,11 @@ class LessonPlanStepTwo extends Component {
             <Col md={10}>
               <FormGroup>
                 <Label for="currentOutcome">Learning Outcomes</Label>
-                <Input type="text" name="currentOutcome" id="currentOutcome" value={currentOutcome} onChange={this.handleChange} />
+                <Input type="text" name="currentOutcome" id="currentOutcome" value={currentOutcome} onChange={this.props.handleChange} placeholder='Enter a Learning Outcome' />
               </FormGroup>
             </Col>
             <Col md={2}>
-              <Button className='button-margin' onClick={() => this.props.addOutcome(currentOutcome)}>Add Outcome</Button>
+              <Button className='button-margin' onClick={this.props.addOutcome}>Add Outcome</Button>
             </Col>
           </Row>
           <Row form>

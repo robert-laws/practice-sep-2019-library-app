@@ -113,7 +113,7 @@ class LessonPlanStepOne extends Component {
             <Col md={3}>
               <FormGroup>
                 <Label for="date">Session Date</Label>
-                <Input type="date" name="date" id="stepOne-date" placeholder="date placeholder" value={date} onChange={this.props.handleChange} />
+                <Input type="date" name="date" id="stepOne-date" placeholder="mm/dd/yy" value={date} onChange={this.props.handleChange} />
               </FormGroup>
             </Col>
             <Col md={3}>
