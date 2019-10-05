@@ -28,7 +28,20 @@ class LessonPlanMasterForm extends Component {
     },
     stepTwo: {
       classAssignment: '',
-      learningOutcomes: []
+      learningOutcomes: [],
+      informationLiteracy: [
+        {id: 1, name: 'Searching', checked: false},
+        {id: 2, name: 'Research', checked: false},
+        {id: 3, name: 'Evaluating Sources', checked: true},
+        {id: 4, name: 'Citations', checked: false},
+        {id: 5, name: 'Reviewing Data', checked: false},
+      ],
+      thresholdConcepts: [
+        {id: 1, name: 'Learning is a Step Forward', checked: false},
+        {id: 2, name: 'Reading is Fundamental', checked: false},
+        {id: 3, name: 'Finding New Resources', checked: true},
+        {id: 4, name: 'Reviewing Library Data', checked: false},
+      ]
     }
   }
 
@@ -100,6 +113,27 @@ class LessonPlanMasterForm extends Component {
     }
   }
 
+  handleCheckBoxes = event => {
+    const { id, checked } = event.target;
+    const tree = id.split('-')[0];
+    const name = id.split('-')[1];
+    const eventId = id.split('-')[2];
+
+    let list = this.state.stepTwo[`${name}`];
+
+    let match = list.findIndex(item => {
+      return item.id === Number(eventId)
+    });
+
+    list[match].checked = checked;
+    
+    let newState = { ...this.state[`${tree}`], [name]: list }
+
+    this.setState({
+      [`${tree}`]: newState
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault();
   }
@@ -136,7 +170,7 @@ class LessonPlanMasterForm extends Component {
           <Col sm="12">
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
-              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepTwo} addOutcome={this.addOutcome} currentOutcome={this.state.currentOutcome} />
+              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addOutcome={this.addOutcome} currentOutcome={this.state.currentOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} />
 
               <Row className='mt-3'>

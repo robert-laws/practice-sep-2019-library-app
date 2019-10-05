@@ -1,28 +1,17 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { FormGroup, Label, Input, Button } from 'reactstrap';
+import { FormGroup, Label, Input, CustomInput, Button } from 'reactstrap';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 
 class LessonPlanStepTwo extends Component {
-  state = {
-    currentOutcome: ''
-  }
-
-  handleChange = event => {
-    const { name, value } = event.target;    
-    this.setState({
-      [name]: value
-    })
-  }
-
   render() {
     if (this.props.currentStep !== 2) {
       return null;
     }
 
     const currentOutcome = this.props.currentOutcome;
-    const { classAssignment, learningOutcomes } = this.props.formData;
+    const { classAssignment, learningOutcomes, informationLiteracy, thresholdConcepts } = this.props.formData;
 
     return (
       <Card>
@@ -56,6 +45,30 @@ class LessonPlanStepTwo extends Component {
                   return <ListGroupItem key={index}>{outcome}</ListGroupItem>
                 })}
               </ListGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+            <FormGroup>
+              <Label for="informationLiteracy">Information Literacy Objectives</Label>
+              <div>
+                {informationLiteracy.map(infoLit => {
+                  return <CustomInput key={infoLit.id} type="checkbox" id={`stepTwo-informationLiteracy-${infoLit.id}`} name='informationLiteracy' label={infoLit.name} onChange={this.props.handleCheckBoxes} checked={infoLit.checked} />
+                })}
+              </div>
+            </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+            <FormGroup>
+              <Label for="thresholdConcepts">Threshold Concepts</Label>
+              <div>
+                {thresholdConcepts.map(concept => {
+                  return <CustomInput key={concept.id} type="checkbox" id={`stepTwo-thresholdConcepts-${concept.id}`} name='thresholdConcepts' label={concept.name} onChange={this.props.handleCheckBoxes} checked={concept.checked} />
+                })}
+              </div>
+            </FormGroup>
             </Col>
           </Row>
         </CardBody>
