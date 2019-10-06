@@ -3,6 +3,7 @@ import { Row, Col } from 'reactstrap';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { FormGroup, Label, Input, Button } from 'reactstrap';
 import { Table } from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 
 class LessonPlanStepThree extends Component {
 
@@ -18,7 +19,8 @@ class LessonPlanStepThree extends Component {
       return null;
     }
 
-    const { moduleName, modules } = this.props.formData;
+    const resource = this.props.resource
+    const { moduleName, modules, resources } = this.props.formData;
 
     return (
       <Card>
@@ -40,7 +42,7 @@ class LessonPlanStepThree extends Component {
           </Row>
           <Row form>
             <Col md={12}>
-              <Table className='modulesTable'>
+              <Table className='modulesTable' bordered>
                 <thead>
                   <tr>
                     <th>Module Details</th>
@@ -86,6 +88,26 @@ class LessonPlanStepThree extends Component {
                   })}
                 </tbody>
               </Table>
+            </Col>
+          </Row>
+          <Row form>
+            <Col md={10}>
+              <FormGroup>
+                <Label for="resource" className='biggerLabel'>Resources Used</Label>
+                <Input type="text" name="resource" id="resource" value={resource} onChange={this.props.handleChange} placeholder='Enter a Resource Used' />
+              </FormGroup>
+            </Col>
+            <Col md={2}>
+              <Button className='button-margin' id='stepThree-resources' onClick={this.props.addToList}>Add Resource</Button>
+            </Col>
+          </Row>
+          <Row form>
+            <Col md={12}>
+              <ListGroup className='learningOutcomesList'>                
+                {resources.map((resource, index) => {
+                  return <ListGroupItem key={index}>{resource}</ListGroupItem>
+                })}
+              </ListGroup>
             </Col>
           </Row>
           <Row form>

@@ -14,7 +14,8 @@ import LessonPlanStepThree from './LessonPlanStepThree.component';
 class LessonPlanMasterForm extends Component {
   state = {
     currentStep: 1,
-    currentOutcome: '',
+    learningOutcome: '',
+    resource: '',
     stepOne: {
       term: '0',
       courseNumber: '0',
@@ -54,7 +55,8 @@ class LessonPlanMasterForm extends Component {
     },
     stepThree: {
       moduleName: '0',
-      modules: []
+      modules: [],
+      resources: []
     }
   }
 
@@ -108,17 +110,22 @@ class LessonPlanMasterForm extends Component {
     })
   }
 
-  addOutcome = () => {
-    let outcomes = this.state.stepTwo.learningOutcomes;
-    if (this.state.currentOutcome !== '') {
-      outcomes = outcomes.concat(this.state.currentOutcome);
-      let newState = { ...this.state.stepTwo, learningOutcomes: outcomes}
+  addToList = event => {
+    const { id } = event.target;
+    const step = id.split('-')[0];
+    const list = id.split('-')[1];
+    const stateValue = list.substring(0, list.length - 1);
+
+    let array = this.state[`${step}`][`${list}`];
+    if (this.state[`${stateValue}`] !== '') {
+      array = array.concat(this.state[`${stateValue}`]);
+      let newState = { ...this.state[`${step}`], [`${list}`]: array }
       this.setState({
-        stepTwo: newState
+        [`${step}`]: newState
       })
 
       this.setState({
-        currentOutcome: ''
+        [`${stateValue}`]: ''
       })
     }
   }
@@ -195,8 +202,8 @@ class LessonPlanMasterForm extends Component {
           <Col sm="12">
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
-              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addOutcome={this.addOutcome} currentOutcome={this.state.currentOutcome} />
-              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} />
+              <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
+              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
