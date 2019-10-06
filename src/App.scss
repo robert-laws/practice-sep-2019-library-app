@@ -29,8 +29,15 @@
   span {
     margin-left: 20px;
     display: block;
-    display: list-item;          /* This has to be "list-item"                                               */
-    list-style-type: disc;       /* See https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type     */
+    display: list-item;
+    list-style-type: disc;
     list-style-position: inside;
   }
+}
+
+.customForm {
+  border: 1px solid #DDD;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 10px 20px;
 }

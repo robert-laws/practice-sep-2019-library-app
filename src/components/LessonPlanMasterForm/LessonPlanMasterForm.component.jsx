@@ -16,6 +16,7 @@ class LessonPlanMasterForm extends Component {
     currentStep: 1,
     learningOutcome: '',
     resource: '',
+    custom: false,
     stepOne: {
       term: '0',
       courseNumber: '0',
@@ -60,6 +61,33 @@ class LessonPlanMasterForm extends Component {
     }
   }
 
+  addCustomModule = customContent => {
+    const groupName = customContent.customFormConceptsGroupName === '' ? 'none' : customContent.customFormConceptsGroupName;
+
+    let myModule = {
+      id: customContent.id,
+      moduleName: customContent.customModuleName,
+      time: customContent.customTime,
+      concepts: [
+        {
+          id: '1',
+          groupName: groupName,
+          details: customContent.customFormConceptsGroupDetailEntries
+        }
+      ]
+    }
+
+    let modules = this.state.stepThree.modules;
+    modules = modules.concat(myModule);
+        
+    let newState = { ...this.state.stepThree, moduleName: '0', modules }
+
+    this.setState({
+      stepThree: newState,
+      custom: false
+    })
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if(this.state.stepOne.courseNumber !== prevState.stepOne.courseNumber) {
       const thisCourse = courseList.filter(course => {
@@ -78,17 +106,29 @@ class LessonPlanMasterForm extends Component {
         })
       }
     } else if(this.state.stepThree.moduleName !== prevState.stepThree.moduleName && this.state.stepThree.moduleName !== '0') {
-      const thisModule = modulesList.filter(module => {
-        return module.moduleName === this.state.stepThree.moduleName
-      })
+      let thisModule = {};
 
-      let modules = this.state.stepThree.modules;
-      modules = modules.concat(thisModule);
-      
-      let newState = { ...this.state.stepThree, moduleName: '0', modules }
-      this.setState({
-        stepThree: newState
-      })
+      if(this.state.stepThree.moduleName === 'custom') {
+        let modules = this.state.stepThree.modules;
+        
+        let newState = { ...this.state.stepThree, moduleName: '0', modules }
+        this.setState({
+          stepThree: newState,
+          custom: true,
+        })
+      } else {
+        thisModule = modulesList.filter(module => {
+          return module.moduleName === this.state.stepThree.moduleName
+        })
+        
+        let modules = this.state.stepThree.modules;
+        modules = modules.concat(thisModule);
+        
+        let newState = { ...this.state.stepThree, moduleName: '0', modules }
+        this.setState({
+          stepThree: newState
+        })
+      }
     }
   }
 
@@ -203,7 +243,7 @@ class LessonPlanMasterForm extends Component {
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
-              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} />
+              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addCustomModule={this.addCustomModule} addedCustom={this.state.addedCustom} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>

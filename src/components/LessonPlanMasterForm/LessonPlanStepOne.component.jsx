@@ -3,28 +3,10 @@ import { Row, Col } from 'reactstrap';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { FormGroup, Label, Input } from 'reactstrap';
 
+import timeIntervals from '../../utilities/timeIntervals';
+import durationIntervals from '../../utilities/durationIntervals';
+
 class LessonPlanStepOne extends Component {
-  durationIntervals = (start, finish, interval) => {
-    let intervals = [];
-    do {
-      intervals.push(start);
-      start = start + interval;
-    }
-    while(start <= finish)
-    return intervals;
-  }
-
-  timeIntervals = (start, end) => {
-    let intervals = [];
-    let minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
-    for(let j = start; j <= end; j++) {
-      for(let i = 0; i < minutes.length; i++) {
-        intervals.push(`${j}:${minutes[i]}`);
-      }
-    }
-    return intervals;
-  }
-
   getCourseList = term => {
     const courseListing = this.props.courses.map(course => {
       if(course.term === term) {
@@ -121,7 +103,7 @@ class LessonPlanStepOne extends Component {
                 <Label for="startTime">Session Starting Time</Label>
                 <Input type="select" name="startTime" id="stepOne-startTime" value={startTime} onChange={this.props.handleChange}>
                   <option value="0">Make a Selection</option>
-                  {this.timeIntervals(8, 20).map(interval => {
+                  {timeIntervals(8, 20).map(interval => {
                     return <option key={interval} value={interval}>{interval}</option>
                   })}
                 </Input>
@@ -132,7 +114,7 @@ class LessonPlanStepOne extends Component {
                 <Label for="duration">Session Duration in Minutes</Label>
                 <Input type="select" name="duration" id="stepOne-duration" value={duration} onChange={this.props.handleChange}>
                   <option value="0">Make a Selection</option>
-                  {this.durationIntervals(5, 75, 5).map(interval => {
+                  {durationIntervals(5, 75, 5).map(interval => {
                     return <option key={interval} value={interval}>{interval}</option>
                   })}
                 </Input>
@@ -143,7 +125,7 @@ class LessonPlanStepOne extends Component {
                 <Label for="studentCount">Number of Students</Label>
                 <Input type="select" name="studentCount" id="stepOne-studentCount" value={studentCount} onChange={this.props.handleChange}>
                   <option value="0">Make a Selection</option>
-                  {this.durationIntervals(1, 35, 1).map(interval => {
+                  {durationIntervals(1, 35, 1).map(interval => {
                     return <option key={interval} value={interval}>{interval}</option>
                   })}
                 </Input>
