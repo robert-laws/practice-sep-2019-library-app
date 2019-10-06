@@ -22,7 +22,7 @@ class LessonPlanStepTwo extends Component {
           <Row form>
             <Col md={12}>
               <FormGroup>
-                <Label for="classAssignment">Class Assignment</Label>
+                <Label for="classAssignment" className='biggerLabel'>Class Assignment</Label>
                 <Input type="textarea" name="classAssignment" id="stepTwo-classAssignment" value={classAssignment} onChange={this.props.handleChange} />
               </FormGroup>
             </Col>
@@ -30,7 +30,7 @@ class LessonPlanStepTwo extends Component {
           <Row form>
             <Col md={10}>
               <FormGroup>
-                <Label for="currentOutcome">Learning Outcomes</Label>
+                <Label for="currentOutcome" className='biggerLabel'>Learning Outcomes</Label>
                 <Input type="text" name="currentOutcome" id="currentOutcome" value={currentOutcome} onChange={this.props.handleChange} placeholder='Enter a Learning Outcome' />
               </FormGroup>
             </Col>
@@ -40,7 +40,7 @@ class LessonPlanStepTwo extends Component {
           </Row>
           <Row form>
             <Col md={12}>
-              <ListGroup>                
+              <ListGroup className='learningOutcomesList'>                
                 {learningOutcomes.map((outcome, index) => {
                   return <ListGroupItem key={index}>{outcome}</ListGroupItem>
                 })}
@@ -50,7 +50,7 @@ class LessonPlanStepTwo extends Component {
           <Row>
             <Col md={12}>
             <FormGroup>
-              <Label for="informationLiteracy">Information Literacy Objectives</Label>
+              <Label for="informationLiteracy" className='biggerLabel'>Information Literacy Objectives</Label>
               <div>
                 {informationLiteracy.map(infoLit => {
                   return <CustomInput key={infoLit.id} type="checkbox" id={`stepTwo-informationLiteracy-${infoLit.id}`} name='informationLiteracy' label={infoLit.name} onChange={this.props.handleCheckBoxes} checked={infoLit.checked} />
@@ -62,7 +62,7 @@ class LessonPlanStepTwo extends Component {
           <Row>
             <Col md={12}>
             <FormGroup>
-              <Label for="thresholdConcepts">Threshold Concepts</Label>
+              <Label for="thresholdConcepts" className='biggerLabel'>Threshold Concepts</Label>
               <div>
                 {thresholdConcepts.map(concept => {
                   return <CustomInput key={concept.id} type="checkbox" id={`stepTwo-thresholdConcepts-${concept.id}`} name='thresholdConcepts' label={concept.name} onChange={this.props.handleCheckBoxes} checked={concept.checked} />

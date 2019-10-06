@@ -5,6 +5,7 @@ import { Form } from 'reactstrap';
 
 import courseList from '../../data/courseList';
 import librariansList from '../../data/librariansList';
+import modulesList from '../../data/modules';
 
 import LessonPlanStepOne from './LessonPlanStepOne.component';
 import LessonPlanStepTwo from './LessonPlanStepTwo.component';
@@ -30,18 +31,30 @@ class LessonPlanMasterForm extends Component {
       classAssignment: '',
       learningOutcomes: [],
       informationLiteracy: [
-        {id: 1, name: 'Searching', checked: false},
-        {id: 2, name: 'Research', checked: false},
-        {id: 3, name: 'Evaluating Sources', checked: true},
-        {id: 4, name: 'Citations', checked: false},
-        {id: 5, name: 'Reviewing Data', checked: false},
+        {id: 1, name: 'Avoiding Plagiarism', checked: false},
+        {id: 2, name: 'Citing', checked: false},
+        {id: 3, name: 'Evaluating Sources', checked: false},
+        {id: 4, name: 'Literature Review', checked: false},
+        {id: 5, name: 'Finding Journal Articles', checked: false},
+        {id: 6, name: 'Finding/Using Multimedia Sources', checked: false},
+        {id: 7, name: 'Gathering Data/Statistics', checked: false},
+        {id: 8, name: 'Primary Sources', checked: false},
+        {id: 9, name: 'Scholarly vs. Non-scholarly Sources', checked: false},
+        {id: 10, name: 'Search Strategy/Skills', checked: false},
+        {id: 11, name: 'Software Instruction', checked: false}
       ],
       thresholdConcepts: [
-        {id: 1, name: 'Learning is a Step Forward', checked: false},
-        {id: 2, name: 'Reading is Fundamental', checked: false},
-        {id: 3, name: 'Finding New Resources', checked: true},
-        {id: 4, name: 'Reviewing Library Data', checked: false},
+        {id: 1, name: 'Authority is Constructed and Contextual', checked: false},
+        {id: 2, name: 'Information Creation as a Process', checked: false},
+        {id: 3, name: 'Information has Value', checked: false},
+        {id: 4, name: 'Research as Inquiry', checked: false},
+        {id: 5, name: 'Scholarship as Conversation', checked: false},
+        {id: 6, name: 'Search as Strategic Exploration', checked: false}
       ]
+    },
+    stepThree: {
+      moduleName: '0',
+      modules: []
     }
   }
 
@@ -62,6 +75,18 @@ class LessonPlanMasterForm extends Component {
           stepOne: newState
         })
       }
+    } else if(this.state.stepThree.moduleName !== prevState.stepThree.moduleName && this.state.stepThree.moduleName !== '0') {
+      const thisModule = modulesList.filter(module => {
+        return module.moduleName === this.state.stepThree.moduleName
+      })
+
+      let modules = this.state.stepThree.modules;
+      modules = modules.concat(thisModule);
+      
+      let newState = { ...this.state.stepThree, moduleName: '0', modules }
+      this.setState({
+        stepThree: newState
+      })
     }
   }
 
@@ -171,7 +196,7 @@ class LessonPlanMasterForm extends Component {
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addOutcome={this.addOutcome} currentOutcome={this.state.currentOutcome} />
-              <LessonPlanStepThree currentStep={this.state.currentStep} />
+              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
