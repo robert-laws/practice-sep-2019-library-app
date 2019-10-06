@@ -8,21 +8,6 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import durationIntervals from '../../utilities/durationIntervals';
 
 class LessonPlanStepThree extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      id:'20',
-      customModuleName:'',
-      customTime: '',
-      customConcepts: [],
-      customFormConceptsGroupName: '',
-      customFormConceptsGroupDetail: '',
-      customFormConceptsGroupDetailEntry: '',
-      customFormConceptsGroupDetailEntries: []
-    }
-  }
-
   getModulesList = () => {
     const modulesListing = this.props.modules.map(module => {
       return <option key={module.id} value={module.moduleName}>{module.moduleName}</option>
@@ -37,25 +22,15 @@ class LessonPlanStepThree extends Component {
     })
   }
 
-  addToList = () => {
-    let list = this.state.customFormConceptsGroupDetailEntries;
-    let detail = this.state.customFormConceptsGroupDetailEntry;
-    list = list.concat(detail);
-    this.setState({
-      customFormConceptsGroupDetailEntry: '',
-      customFormConceptsGroupDetailEntries: list
-    })
-  }
-
   render() {
     if (this.props.currentStep !== 3) {
       return null;
     }
 
-    const { customModuleName, customTime, customFormConceptsGroupName, customFormConceptsGroupDetailEntry, customFormConceptsGroupDetailEntries} = this.state;
     const resource = this.props.resource;
     const customForm = this.props.customForm;
     const { moduleName, modules, resources } = this.props.formData;
+    const { customModuleName, customTime, customFormConceptsGroupName, customFormConceptsGroupDetailEntry, customFormConceptsGroupDetailEntries } = this.props.customModuleData;
 
     return (
       <Card>
@@ -84,13 +59,13 @@ class LessonPlanStepThree extends Component {
                 <Col md={6}>
                   <FormGroup>
                     <Label for='customModuleName'>Custom Module Name</Label>
-                    <Input type="text" name="customModuleName" id="customModuleName" value={customModuleName} onChange={this.handleChange} placeholder='Enter a Custom Module Name' />
+                    <Input type="text" name="customModuleName" id="customModule-customModuleName" value={customModuleName} onChange={this.props.handleChange} placeholder='Enter a Custom Module Name' />
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup>
                     <Label for="customTime">Time for Custom Module</Label>
-                    <Input type="select" name="customTime" id="customTime" value={customTime} onChange={this.handleChange}>
+                    <Input type="select" name="customTime" id="customModule-customTime" value={customTime} onChange={this.props.handleChange}>
                     <option value="0">Make a Selection</option>
                     {durationIntervals(5, 35, 5).map(interval => {
                       return <option key={interval} value={interval}>{interval}</option>
@@ -101,17 +76,17 @@ class LessonPlanStepThree extends Component {
                 <Col md={12}>
                   <FormGroup>
                     <Label for="customFormConceptsGroupName">Name for Custom Module (if applicable)</Label>
-                    <Input type="text" name="customFormConceptsGroupName" id="customFormConceptsGroupName" value={customFormConceptsGroupName} onChange={this.handleChange} placeholder='Enter a Name for Custom Module (if applicable)' />
+                    <Input type="text" name="customFormConceptsGroupName" id="customModule-customFormConceptsGroupName" value={customFormConceptsGroupName} onChange={this.props.handleChange} placeholder='Enter a Name for Custom Module (if applicable)' />
                   </FormGroup>
                 </Col>
                 <Col md={10}>
                   <FormGroup>
                     <Label for="customFormConceptsGroupDetailEntry" className='biggerLabel'>Add a Module Detail</Label>
-                    <Input type="text" name="customFormConceptsGroupDetailEntry" id="customFormConceptsGroupDetailEntry" value={customFormConceptsGroupDetailEntry} onChange={this.handleChange} placeholder='Enter a Module Detail' />
+                    <Input type="text" name="customFormConceptsGroupDetailEntry" id="customModule-customFormConceptsGroupDetailEntry" value={customFormConceptsGroupDetailEntry} onChange={this.props.handleChange} placeholder='Enter a Module Detail' />
                   </FormGroup>
                 </Col>
                 <Col md={2}>
-                  <Button className='button-margin' id='addModuleDetail' onClick={this.addToList}>Add Detail</Button>
+                  <Button className='button-margin' id='addModuleDetail' onClick={this.props.addToCustomModuleList}>Add Detail</Button>
                 </Col>
                 <Col md={12}>
                   <ListGroup className='learningOutcomesList'>                
@@ -121,7 +96,7 @@ class LessonPlanStepThree extends Component {
                   </ListGroup>
                 </Col>
                 <Col md={12} className='text-right'>
-                  <Button color='primary' onClick={() => this.props.addCustomModule(this.state)}>Add Custom Module to Lesson</Button>
+                  <Button color='primary' onClick={this.props.addCustomModule}>Add Custom Module to Lesson</Button>
                 </Col>
               </Row>
             ) : ''}

@@ -17,6 +17,16 @@ class LessonPlanMasterForm extends Component {
     learningOutcome: '',
     resource: '',
     custom: false,
+    customModule: {
+      customModuleId:'20',
+      customModuleName:'',
+      customTime: '',
+      customConcepts: [],
+      customFormConceptsGroupName: '',
+      customFormConceptsGroupDetail: '',
+      customFormConceptsGroupDetailEntry: '',
+      customFormConceptsGroupDetailEntries: [],
+    },
     stepOne: {
       term: '0',
       courseNumber: '0',
@@ -61,18 +71,30 @@ class LessonPlanMasterForm extends Component {
     }
   }
 
-  addCustomModule = customContent => {
-    const groupName = customContent.customFormConceptsGroupName === '' ? 'none' : customContent.customFormConceptsGroupName;
+  addToCustomModuleList = () => {
+    let list = this.state.customModule.customFormConceptsGroupDetailEntries;
+    let detail = this.state.customModule.customFormConceptsGroupDetailEntry;
+    list = list.concat(detail);
+
+    let newState = { ...this.state.customModule, customFormConceptsGroupDetailEntry: '', customFormConceptsGroupDetailEntries: list }
+
+    this.setState({
+      customModule: newState
+    })
+  }
+
+  addCustomModule = () => {
+    const groupName = this.state.customModule.customFormConceptsGroupName === '' ? 'none' : this.state.customModule.customFormConceptsGroupName;
 
     let myModule = {
-      id: customContent.id,
-      moduleName: customContent.customModuleName,
-      time: customContent.customTime,
+      id: this.state.customModule.customModuleId,
+      moduleName: this.state.customModule.customModuleName,
+      time: this.state.customModule.customTime,
       concepts: [
         {
           id: '1',
           groupName: groupName,
-          details: customContent.customFormConceptsGroupDetailEntries
+          details: this.state.customModule.customFormConceptsGroupDetailEntries
         }
       ]
     }
@@ -80,9 +102,21 @@ class LessonPlanMasterForm extends Component {
     let modules = this.state.stepThree.modules;
     modules = modules.concat(myModule);
         
+    let newModuleState = {
+      customModuleId:'20',
+      customModuleName:'',
+      customTime: '',
+      customConcepts: [],
+      customFormConceptsGroupName: '',
+      customFormConceptsGroupDetail: '',
+      customFormConceptsGroupDetailEntry: '',
+      customFormConceptsGroupDetailEntries: [],
+    }
+
     let newState = { ...this.state.stepThree, moduleName: '0', modules }
 
     this.setState({
+      customModule: newModuleState,
       stepThree: newState,
       custom: false
     })
@@ -243,7 +277,7 @@ class LessonPlanMasterForm extends Component {
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
-              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addCustomModule={this.addCustomModule} addedCustom={this.state.addedCustom} />
+              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} customModuleData={this.state.customModule} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
