@@ -92,6 +92,51 @@ const modules = [
         ]
       }
     ]
+  },
+  {
+    'id': '5',
+    'moduleName': 'Citing Properly',
+    'time': '20',
+    'concepts': [
+      {
+        'id': '1',
+        'groupName': 'none',
+        'details': [
+          'Know where to get citing help.',
+          'Read citations.',
+          'Find machine generated citations and correct mistakes, if any.',
+          'Understand what copyright is, why it is important, and when it is applicable (ex. public domain vs. common knowledge).'
+        ]
+      }
+    ]
+  },
+  {
+    'id': '6',
+    'moduleName': 'Primary vs. Secondary Sources',
+    'time': '30',
+    'concepts': [
+      {
+        'id': '1',
+        'groupName': 'none',
+        'details': [
+          'Define what is a primary source.',
+          'Use the library and the internet to locate primary sources.',
+          'Distinguish between primary and secondary sources.'
+        ]
+      }
+    ]
+  },
+  {
+    'id': '7',
+    'moduleName': 'Literature Review',
+    'time': '30',
+    'details': [
+      'Evaluate scope of research question',
+      'Use HoyaSearch & other tools to find materials',
+      'Use other techniques to discover materials: reference sources, forward/ backward citation search, browsing',
+      'Evaluate sources for authority and relevance',
+      'Understand the value of a citation tool for carrying out a literature review'
+    ]
   }
 ]
 
