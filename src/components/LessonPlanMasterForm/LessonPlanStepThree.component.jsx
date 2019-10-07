@@ -172,11 +172,6 @@ class LessonPlanStepThree extends Component {
               </ListGroup>
             </Col>
           </Row>
-          <Row form>
-            <Col md={12} className='text-right'>
-              <Button color='primary'>Review and Submit</Button>
-            </Col>
-          </Row>
         </CardBody>
       </Card>
     )

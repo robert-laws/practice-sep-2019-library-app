@@ -10,6 +10,7 @@ import modulesList from '../../data/modules';
 import LessonPlanStepOne from './LessonPlanStepOne.component';
 import LessonPlanStepTwo from './LessonPlanStepTwo.component';
 import LessonPlanStepThree from './LessonPlanStepThree.component';
+import LessonPlanStepFour from './LessonPlanStepFour.component';
 
 class LessonPlanMasterForm extends Component {
   state = {
@@ -46,10 +47,10 @@ class LessonPlanMasterForm extends Component {
         {id: 1, name: 'Avoiding Plagiarism', checked: false},
         {id: 2, name: 'Citing', checked: false},
         {id: 3, name: 'Evaluating Sources', checked: false},
-        {id: 4, name: 'Literature Review', checked: false},
-        {id: 5, name: 'Finding Journal Articles', checked: false},
-        {id: 6, name: 'Finding/Using Multimedia Sources', checked: false},
-        {id: 7, name: 'Gathering Data/Statistics', checked: false},
+        {id: 4, name: 'Finding Journal Articles', checked: false},
+        {id: 5, name: 'Finding/Using Multimedia Sources', checked: false},
+        {id: 6, name: 'Gathering Data/Statistics', checked: false},
+        {id: 7, name: 'Literature Review', checked: false},
         {id: 8, name: 'Primary Sources', checked: false},
         {id: 9, name: 'Scholarly vs. Non-scholarly Sources', checked: false},
         {id: 10, name: 'Search Strategy/Skills', checked: false},
@@ -68,6 +69,9 @@ class LessonPlanMasterForm extends Component {
       moduleName: '0',
       modules: [],
       resources: []
+    },
+    stepFour: {
+
     }
   }
 
@@ -218,7 +222,7 @@ class LessonPlanMasterForm extends Component {
 
   _next = () => {
     let currentStep = this.state.currentStep;
-    currentStep = currentStep >= 2 ? 3 : currentStep + 1;
+    currentStep = currentStep >= 3 ? 4 : currentStep + 1;
 
     this.setState({
       currentStep
@@ -307,9 +311,9 @@ class LessonPlanMasterForm extends Component {
 
   get nextButton() {
     const currentStep = this.state.currentStep;
-    if(currentStep < 3) {
+    if(currentStep < 4) {
       return (
-        <Button color='secondary' onClick={this._next}>Next Step</Button>
+        <Button color='secondary' onClick={this._next}>{currentStep !== 3 ? 'Next Step' : 'Final Step - Review and Submit'}</Button>
       )
     }
 
@@ -328,6 +332,7 @@ class LessonPlanMasterForm extends Component {
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} addCustomModuleSection={this.addCustomModuleSection} cancelCustomModule={this.cancelCustomModule} customModuleData={this.state.customModule} />
+              <LessonPlanStepFour currentStep={this.state.currentStep} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
