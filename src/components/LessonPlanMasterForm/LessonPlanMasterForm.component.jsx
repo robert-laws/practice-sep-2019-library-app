@@ -332,7 +332,7 @@ class LessonPlanMasterForm extends Component {
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} addCustomModuleSection={this.addCustomModuleSection} cancelCustomModule={this.cancelCustomModule} customModuleData={this.state.customModule} />
-              <LessonPlanStepFour currentStep={this.state.currentStep} />
+              <LessonPlanStepFour currentStep={this.state.currentStep} stepOneData={this.state.stepOne} stepTwoData={this.state.stepTwo} stepThreeData={this.state.stepThree} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
