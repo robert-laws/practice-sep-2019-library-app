@@ -85,18 +85,21 @@ class LessonPlanMasterForm extends Component {
 
   addCustomModule = () => {
     const groupName = this.state.customModule.customFormConceptsGroupName === '' ? 'none' : this.state.customModule.customFormConceptsGroupName;
+    let concepts = this.state.customModule.customConcepts;
+    const newId = this.state.customModule.customConcepts.length + 1;
+
+    const newConcept = {
+      id: newId,
+      groupName: groupName,
+      details: this.state.customModule.customFormConceptsGroupDetailEntries
+    }
+    concepts = concepts.concat(newConcept);
 
     let myModule = {
       id: this.state.customModule.customModuleId,
       moduleName: this.state.customModule.customModuleName,
       time: this.state.customModule.customTime,
-      concepts: [
-        {
-          id: '1',
-          groupName: groupName,
-          details: this.state.customModule.customFormConceptsGroupDetailEntries
-        }
-      ]
+      concepts: concepts
     }
 
     let modules = this.state.stepThree.modules;
@@ -118,6 +121,53 @@ class LessonPlanMasterForm extends Component {
     this.setState({
       customModule: newModuleState,
       stepThree: newState,
+      custom: false
+    })
+  }
+
+  addCustomModuleSection = () => {
+    const groupName = this.state.customModule.customFormConceptsGroupName === '' ? 'none' : this.state.customModule.customFormConceptsGroupName;
+    const newId = this.state.customModule.customConcepts.length + 1;
+
+    let mySubsection = {
+      id: newId,
+      groupName: groupName,
+      details: this.state.customModule.customFormConceptsGroupDetailEntries
+    }
+
+    let concepts = this.state.customModule.customConcepts;
+    concepts = concepts.concat(mySubsection);
+
+    let newModuleState = {
+      customModuleId: '20',
+      customModuleName: this.state.customModule.customModuleName,
+      customTime: this.state.customModule.customTime,
+      customConcepts: concepts,
+      customFormConceptsGroupName: '',
+      customFormConceptsGroupDetail: '',
+      customFormConceptsGroupDetailEntry: '',
+      customFormConceptsGroupDetailEntries: [],
+    }
+
+    this.setState({
+      customModule: newModuleState
+    })
+  }
+
+  cancelCustomModule = () => {
+    let newModuleState = {
+      customModuleId:'20',
+      customModuleName:'',
+      customTime: '',
+      customConcepts: [],
+      customFormConceptsGroupName: '',
+      customFormConceptsGroupDetail: '',
+      customFormConceptsGroupDetailEntry: '',
+      customFormConceptsGroupDetailEntries: [],
+    }
+
+    this.setState({
+      customModule: newModuleState,
       custom: false
     })
   }
@@ -277,7 +327,7 @@ class LessonPlanMasterForm extends Component {
             <Form onSubmit={this.handleSubmit}>
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
-              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} customModuleData={this.state.customModule} />
+              <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} addCustomModuleSection={this.addCustomModuleSection} cancelCustomModule={this.cancelCustomModule} customModuleData={this.state.customModule} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
