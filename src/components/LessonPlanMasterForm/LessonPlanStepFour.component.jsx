@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import { Table } from 'reactstrap';
 
 class LessonPlanStepFour extends Component {
@@ -50,15 +50,15 @@ class LessonPlanStepFour extends Component {
               <p>Class Assignment: {classAssignment}</p>
               <p><strong>Learning Outcomes:</strong></p>
               <ul>
-                {learningOutcomes.map(outcome => {
-                  return <li>{outcome}</li>
+                {learningOutcomes.map((outcome, index) => {
+                  return <li key={index}>{outcome}</li>
                 })}
               </ul>
               <p><strong>Applied Information Literacy Concepts:</strong></p>
               <ul>
-                {informationLiteracy.map(concept => {
+                {informationLiteracy.map((concept, index) => {
                   if(concept.checked === true) {
-                    return <li>{concept.name}</li>
+                    return <li key={index}>{concept.name}</li>
                   } else {
                     return null
                   }
@@ -66,9 +66,9 @@ class LessonPlanStepFour extends Component {
               </ul>
               <p><strong>Applied ALA Threshold Concepts Concepts:</strong></p>
               <ul>
-                {thresholdConcepts.map(concept => {
+                {thresholdConcepts.map((concept, index) => {
                   if(concept.checked === true) {
-                    return <li>{concept.name}</li>
+                    return <li key={index}>{concept.name}</li>
                   } else {
                     return null
                   }
@@ -132,15 +132,17 @@ class LessonPlanStepFour extends Component {
               </Table>
               <h5>Resources Used</h5>
               <ul>
-                {resources.map(resource => {
-                  return <li>{resource}</li>
+                {resources.map((resource, index) => {
+                  return <li key={index}>{resource}</li>
                 })}
               </ul>
             </Col>
           </Row>
           <Row form>
             <Col md={12} className='text-right'>
-              <Button color='primary'>Review and Submit</Button>
+              <Button color="primary">
+                {this.props.complete ? `Submit Lesson Plan` : <Spinner color="light" size="sm" />}
+              </Button>
             </Col>
           </Row>
         </CardBody>

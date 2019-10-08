@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import { Button } from 'reactstrap';
 import { Form } from 'reactstrap';
@@ -12,8 +13,12 @@ import LessonPlanStepTwo from './LessonPlanStepTwo.component';
 import LessonPlanStepThree from './LessonPlanStepThree.component';
 import LessonPlanStepFour from './LessonPlanStepFour.component';
 
+import { firestore } from '../../firebase/firebaseConfig';
+
 class LessonPlanMasterForm extends Component {
   state = {
+    complete: true,
+    error: '',
     currentStep: 1,
     learningOutcome: '',
     resource: '',
@@ -69,9 +74,6 @@ class LessonPlanMasterForm extends Component {
       moduleName: '0',
       modules: [],
       resources: []
-    },
-    stepFour: {
-
     }
   }
 
@@ -84,6 +86,14 @@ class LessonPlanMasterForm extends Component {
 
     this.setState({
       customModule: newState
+    })
+  }
+
+  toggleComplete = () => {
+    const myComplete = this.state.complete;
+
+    this.setState({
+      complete: !myComplete
     })
   }
 
@@ -294,8 +304,51 @@ class LessonPlanMasterForm extends Component {
     })
   }
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
+    this.toggleComplete();
+    
     event.preventDefault();
+
+    const { term, courseNumber, courseTitle, faculty, librarian, coInstructor, date, startTime, duration, studentCount } = this.state.stepOne
+    const { classAssignment, learningOutcomes, informationLiteracy, thresholdConcepts } = this.state.stepTwo;
+    const { modules, resources } = this.state.stepThree;
+
+    const lessonDuration = Number(duration);
+    const lessonStudentCount = Number(studentCount);
+    const lessonDate = new Date(date);
+
+    const lessonsRef = firestore.collection('lessons');
+
+    const lesson = {
+      term,
+      courseNumber,
+      courseTitle,
+      faculty,
+      librarian,
+      coInstructor,
+      date: lessonDate,
+      startTime,
+      duration: lessonDuration,
+      studentCount: lessonStudentCount,
+      classAssignment,
+      learningOutcomes,
+      informationLiteracy,
+      thresholdConcepts,
+      resources,
+      modules
+    }
+
+    try {
+      await lessonsRef.add(lesson);
+
+      this.props.history.push('/lesson-plans')
+    } catch(error) {
+      this.setState({
+        error: error.message
+      })
+    }
+
+    this.toggleComplete();
   }
 
   get previousButton() {
@@ -332,7 +385,7 @@ class LessonPlanMasterForm extends Component {
               <LessonPlanStepOne currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepOne} courses={courseList} librarians={librariansList} />
               <LessonPlanStepTwo currentStep={this.state.currentStep} handleChange={this.handleChange} handleCheckBoxes={this.handleCheckBoxes} formData={this.state.stepTwo} addToList={this.addToList} learningOutcome={this.state.learningOutcome} />
               <LessonPlanStepThree currentStep={this.state.currentStep} handleChange={this.handleChange} formData={this.state.stepThree} modules={modulesList} addToList={this.addToList} resource={this.state.resource} customForm={this.state.custom} addToCustomModuleList={this.addToCustomModuleList} addCustomModule={this.addCustomModule} addCustomModuleSection={this.addCustomModuleSection} cancelCustomModule={this.cancelCustomModule} customModuleData={this.state.customModule} />
-              <LessonPlanStepFour currentStep={this.state.currentStep} stepOneData={this.state.stepOne} stepTwoData={this.state.stepTwo} stepThreeData={this.state.stepThree} />
+              <LessonPlanStepFour currentStep={this.state.currentStep} stepOneData={this.state.stepOne} stepTwoData={this.state.stepTwo} stepThreeData={this.state.stepThree} complete={this.state.complete} />
 
               <Row className='mt-3'>
                 <Col md={12} className='d-flex justify-content-between'>
@@ -352,4 +405,4 @@ class LessonPlanMasterForm extends Component {
   }
 }
 
-export default LessonPlanMasterForm;
+export default withRouter(LessonPlanMasterForm);
